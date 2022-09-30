@@ -46,7 +46,7 @@ urlpatterns = [
     # path('my-order', views.my_order_view2,name='my-order'),
     path('my-profile', views.my_profile_view,name='my-profile'),
     path('edit-profile', views.edit_profile_view,name='edit-profile'),
-    path('download-invoice/<int:orderID>/<int:productID>', views.download_invoice_view,name='download-invoice'),
+    #path('download-invoice/<int:orderID>/<int:productID>', views.download_invoice_view,name='download-invoice'),
 
 
     path('add-to-cart/<int:pk>', views.add_to_cart_view,name='add-to-cart'),
