@@ -129,6 +129,26 @@ def admin_products_view(request):
     products=models.Product.objects.all()
     return render(request,'ecom/admin_products.html',{'products':products})
 
+@login_required(login_url='adminlogin')
+def admin_products_view_phone(request):
+    product_phone=models.Product_phone.objects.all()
+    return render(request,'ecom/admin-phone.html',{'product_phone':product_phone})
+
+@login_required(login_url='adminlogin')
+def admin_products_view_laptop(request):
+    product_laptop=models.Product_laptop.objects.all()
+    return render(request,'ecom/admin-laptop.html',{'product_laptop':product_laptop})
+
+@login_required(login_url='adminlogin')
+def admin_products_view_part(request):
+    product_part=models.Product_part.objects.all()
+    return render(request,'ecom/admin-part.html',{'product_part':product_part})
+
+@login_required(login_url='adminlogin')
+def admin_products_view_game(request):
+    product_game=models.Product_game.objects.all()
+    return render(request,'ecom/admin-game.html',{'product_game':product_game})
+
 
 # admin add product by clicking on floating button
 @login_required(login_url='adminlogin')
@@ -141,12 +161,57 @@ def admin_add_product_view(request):
         return HttpResponseRedirect('admin-products')
     return render(request,'ecom/admin_add_products.html',{'productForm':productForm})
 
+@login_required(login_url='adminlogin')
+def admin_add_product_view_phone(request):
+    productForm_phone=forms.ProductForm_phone()
+    if request.method=='POST':
+        productForm_phone=forms.ProductForm_phone(request.POST, request.FILES)
+        if productForm_phone.is_valid():
+            productForm_phone.save()
+        return HttpResponseRedirect('admin-add-product-phone')
+    return render(request,'ecom/admin_add_product_phone.html',{'productForm_phone':productForm_phone})
+
+@login_required(login_url='adminlogin')
+def admin_add_product_view_laptop(request):
+    productForm_laptop=forms.ProductForm_laptop()
+    if request.method=='POST':
+        productForm_laptop=forms.ProductForm_laptop(request.POST, request.FILES)
+        if productForm_laptop.is_valid():
+            productForm_laptop.save()
+        return HttpResponseRedirect('admin-add-product-laptop')
+    return render(request,'ecom/admin_add_product_laptop.html',{'productForm_laptop':productForm_laptop})
+
+@login_required(login_url='adminlogin')
+def admin_add_product_view_game(request):
+    productForm_game=forms.ProductForm_game()
+    if request.method=='POST':
+        productForm_game=forms.ProductForm_game(request.POST, request.FILES)
+        if productForm_game.is_valid():
+            productForm_game.save()
+        return HttpResponseRedirect('admin-add-product-game')
+    return render(request,'ecom/admin_add_product_game.html',{'productForm_game':productForm_game})
+
+@login_required(login_url='adminlogin')
+def admin_add_product_view_part(request):
+    productForm_part=forms.ProductForm_part()
+    if request.method=='POST':
+        productForm_part=forms.ProductForm_part(request.POST, request.FILES)
+        if productForm_part.is_valid():
+            productForm_part.save()
+        return HttpResponseRedirect('admin-add-product-part')
+    return render(request,'ecom/admin_add_product_part.html',{'productForm_part':productForm_part})
 
 @login_required(login_url='adminlogin')
 def delete_product_view(request,pk):
     product=models.Product.objects.get(id=pk)
     product.delete()
     return redirect('admin-products')
+
+@login_required(login_url='adminlogin')
+def delete_product_view_phone(request,pk):
+    product=models.Product_phone.objects.get(id=pk)
+    product.delete()
+    return redirect('admin_products_phone')
 
 
 @login_required(login_url='adminlogin')
@@ -162,6 +227,18 @@ def update_product_view(request,pk):
 
 
 @login_required(login_url='adminlogin')
+def update_product_view_phone(request,pk):
+    product_phone=models.Product_phone.objects.get(id=pk)
+    productForm_phone=forms.ProductForm_phone(instance=product_phone)
+    if request.method=='POST':
+        productForm_phone=forms.ProductForm_phone(request.POST,request.FILES,instance=product_phone)
+        if productForm_phone.is_valid():
+            productForm_phone.save()
+            return redirect('admin-products-phone')
+    return render(request,'ecom/admin_update_product_phone.html',{'productForm_phone':productForm_phone})
+
+
+@login_required(login_url='adminlogin')
 def admin_view_booking_view(request):
     orders=models.Orders.objects.all()
     ordered_products=[]
@@ -172,6 +249,18 @@ def admin_view_booking_view(request):
         ordered_products.append(ordered_product)
         ordered_bys.append(ordered_by)
     return render(request,'ecom/admin_view_booking.html',{'data':zip(ordered_products,ordered_bys,orders)})
+
+@login_required(login_url='adminlogin')
+def admin_view_booking_view_phone(request):
+    orders=models.Orders.objects.all()
+    ordered_products=[]
+    ordered_bys=[]
+    for order in orders:
+        ordered_product=models.Product_phone.objects.all().filter(id=order.product.id)
+        ordered_by=models.Customer.objects.all().filter(id = order.customer.id)
+        ordered_products.append(ordered_product)
+        ordered_bys.append(ordered_by)
+    return render(request,'ecom/admin_view_booking_phone.html',{'data':zip(ordered_products,ordered_bys,orders)})
 
 
 @login_required(login_url='adminlogin')
@@ -222,7 +311,28 @@ def search_view(request):
         return render(request,'ecom/customer_home.html',{'products':products,'word':word,'product_count_in_cart':product_count_in_cart})
     return render(request,'ecom/index.html',{'products':products,'word':word,'product_count_in_cart':product_count_in_cart})
 
+def search_view_phone (request):
+    # whatever user write in search box we get in query
+    query = request.GET['query']
+    product_phone=models.Product_phone.objects.all().filter(name__icontains=query)
+    if 'product_ids' in request.COOKIES:
+        product_ids = request.COOKIES['product_ids']
+        counter=product_ids.split('|')
+        product_count_in_cart=len(set(counter))
+    else:
+        product_count_in_cart=0
 
+    # word variable will be shown in html when user click on search button
+    word="Searched Result :"
+
+    if request.user.is_authenticated:
+        return render(request,'ecom/customer-phone.html',{'product_phone':product_phone,'word':word,'product_count_in_cart':product_count_in_cart})
+    return render(request,'ecom/customer-phone.html',{'product_phone':product_phone,'word':word,'product_count_in_cart':product_count_in_cart})
+
+
+
+
+        
 # any one can add product to cart, no need of signin
 def add_to_cart_view(request,pk):
     products=models.Product.objects.all()
@@ -253,7 +363,34 @@ def add_to_cart_view(request,pk):
 
     return response
 
+def add_to_cart_view_phone(request,kk):
+    product_phone=models.Product_phone.objects.all()
 
+    #for cart counter, fetching products ids added by customer from cookies
+    if 'product_ids' in request.COOKIES:
+        product_ids = request.COOKIES['product_ids']
+        counter=product_ids.split('|')
+        product_count_in_cart=len(set(counter))
+    else:
+        product_count_in_cart=1
+
+    response = render(request, 'ecom/customer-phone.html',{'product_phone':product_phone,'product_count_in_cart':product_count_in_cart})
+
+    #adding product id to cookies
+    if 'product_ids' in request.COOKIES:
+        product_ids = request.COOKIES['product_ids']
+        if product_ids=="":
+            product_ids=str(kk)
+        else:
+            product_ids=product_ids+"|"+str(kk)
+        response.set_cookie('product_ids', product_ids)
+    else:
+        response.set_cookie('product_ids', kk)
+
+    product_phone=models.Product_phone.objects.get(id=kk)
+    messages.info(request, product_phone.name + ' added to cart successfully!')
+
+    return response
 
 # for checkout of cart
 def cart_view(request):
@@ -278,6 +415,29 @@ def cart_view(request):
             for p in products:
                 total=total+p.price
     return render(request,'ecom/cart.html',{'products':products,'total':total,'product_count_in_cart':product_count_in_cart})
+
+def cart_view_phone(request):
+    #for cart counter
+    if 'product_ids' in request.COOKIES:
+        product_ids = request.COOKIES['product_ids']
+        counter=product_ids.split('|')
+        product_count_in_cart=len(set(counter))
+    else:
+        product_count_in_cart=0
+
+    # fetching product details from db whose id is present in cookie
+    product_phone=None
+    total=0
+    if 'product_ids' in request.COOKIES:
+        product_ids = request.COOKIES['product_ids']
+        if product_ids != "":
+            product_id_in_cart=product_ids.split('|')
+            product_phone=models.Product_phone.objects.all().filter(id__in = product_id_in_cart)
+
+            #for total price shown in cart
+            for p in product_phone:
+                total=total+p.price
+    return render(request,'ecom/cart_phone.html',{'product_phone':product_phone,'total':total,'product_count_in_cart':product_count_in_cart})
 
 
 def remove_from_cart_view(request,pk):
@@ -339,6 +499,55 @@ def customer_home_view(request):
     else:
         product_count_in_cart=0
     return render(request,'ecom/customer_home.html',{'products':products,'product_count_in_cart':product_count_in_cart})
+
+# @login_required(login_url='customerlogin')
+# @user_passes_test(is_customer)
+def customer_home_view_phone(request):
+    product_phone=models.Product_phone.objects.all()
+    if 'product_ids' in request.COOKIES:
+        product_ids = request.COOKIES['product_ids']
+        counter=product_ids.split('|')
+        product_count_in_cart=len(set(counter))
+    else:
+        product_count_in_cart=0
+    return render(request,'ecom/customer-phone.html',{'product_phone':product_phone,'product_count_in_cart':product_count_in_cart})
+
+# @login_required(login_url='customerlogin')
+# @user_passes_test(is_customer)
+def customer_home_view_laptop(request):
+    product_laptop=models.Product_laptop.objects.all()
+    if 'product_ids' in request.COOKIES:
+        product_ids = request.COOKIES['product_ids']
+        counter=product_ids.split('|')
+        product_count_in_cart=len(set(counter))
+    else:
+        product_count_in_cart=0
+    return render(request,'ecom/customer_laptop.html',{'product_laptop':product_laptop,'product_count_in_cart':product_count_in_cart})
+
+# @login_required(login_url='customerlogin')
+# @user_passes_test(is_customer)
+def customer_home_view_part(request):
+    product_part=models.Product_part.objects.all()
+    if 'product_ids' in request.COOKIES:
+        product_ids = request.COOKIES['product_ids']
+        counter=product_ids.split('|')
+        product_count_in_cart=len(set(counter))
+    else:
+        product_count_in_cart=0
+    return render(request,'ecom/customer_part.html',{'product_part':product_part,'product_count_in_cart':product_count_in_cart})
+
+
+# @login_required(login_url='customerlogin')
+# @user_passes_test(is_customer)
+def customer_home_view_game(request):
+    product_game=models.Product_game.objects.all()
+    if 'product_ids' in request.COOKIES:
+        product_ids = request.COOKIES['product_ids']
+        counter=product_ids.split('|')
+        product_count_in_cart=len(set(counter))
+    else:
+        product_count_in_cart=0
+    return render(request,'ecom/customer_game.html',{'product_game':product_game,'product_count_in_cart':product_count_in_cart})
 
 
 

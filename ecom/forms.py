@@ -20,7 +20,22 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model=models.Product
         fields=['name','price','description','product_image']
-
+class ProductForm_phone(forms.ModelForm):
+    class Meta:
+        model=models.Product_phone
+        fields=['name','price','description','product_image']
+class ProductForm_laptop(forms.ModelForm):
+    class Meta:
+        model=models.Product_laptop
+        fields=['name','price','description','product_image']
+class ProductForm_part(forms.ModelForm):
+    class Meta:
+        model=models.Product_part
+        fields=['name','price','description','product_image']
+class ProductForm_game(forms.ModelForm):
+    class Meta:
+        model=models.Product_game
+        fields=['name','price','description','product_image']
 #address of shipment
 class AddressForm(forms.Form):
     Email = forms.EmailField()

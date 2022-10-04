@@ -23,7 +23,34 @@ class Product(models.Model):
     description=models.CharField(max_length=40)
     def __str__(self):
         return self.name
-
+class Product_phone(models.Model):
+    name=models.CharField(max_length=40)
+    product_image= models.ImageField(upload_to='product_image/',null=True,blank=True)
+    price = models.PositiveIntegerField()
+    description=models.CharField(max_length=40)
+    def __str__(self):
+        return self.name
+class Product_laptop(models.Model):
+    name=models.CharField(max_length=40)
+    product_image= models.ImageField(upload_to='product_image/',null=True,blank=True)
+    price = models.PositiveIntegerField()
+    description=models.CharField(max_length=40)
+    def __str__(self):
+        return self.name
+class Product_part(models.Model):
+    name=models.CharField(max_length=40)
+    product_image= models.ImageField(upload_to='product_image/',null=True,blank=True)
+    price = models.PositiveIntegerField()
+    description=models.CharField(max_length=40)
+    def __str__(self):
+        return self.name
+class Product_game(models.Model):
+    name=models.CharField(max_length=40)
+    product_image= models.ImageField(upload_to='product_image/',null=True,blank=True)
+    price = models.PositiveIntegerField()
+    description=models.CharField(max_length=40)
+    def __str__(self):
+        return self.name
 
 class Orders(models.Model):
     STATUS =(

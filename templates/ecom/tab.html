@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <style>
+    
+    /* Style the navigation bar */
+.navbar {
+  width: 100%;
+  background-color: #555;
+  overflow: auto;
+}
+
+/* Navbar links */
+.navbar a {
+  float: left;
+  text-align: center;
+  padding: 2px;
+  color: white;
+  text-decoration: none;
+  font-size: 17px;
+  margin-left: 15%;
+}
+
+/* Navbar links on mouse-over */
+
+
+/* Current/active navbar link */
+
+
+/* Add responsiveness - will automatically display the navbar vertically instead of horizontally on screens less than 500 pixels */
+@media screen and (max-width: 500px) {
+  .navbar a {
+    float: none;
+    display: block;
+  }
+}
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <a class="active" href="/customer-phone"><i class="fa fa-phone"></i> Phones</a>
+    <a href="/customer-laptop"><i class="fa fa-laptop"></i> Laptops</a>
+    <a href="/customer-part"><i class="fa fa-keyboard-o"></i> Accessories </a>
+    <a href="/customer-game"><i class="fa fa-gamepad"></i> Games</a>
+  </div>
+</body>
+</html>
