@@ -336,6 +336,7 @@ def search_view_phone (request):
 # any one can add product to cart, no need of signin
 def add_to_cart_view(request,pk):
     products=models.Product.objects.all()
+    
 
     #for cart counter, fetching products ids added by customer from cookies
     if 'product_ids' in request.COOKIES:
@@ -364,28 +365,28 @@ def add_to_cart_view(request,pk):
     return response
 
 def add_to_cart_view_phone(request,kk):
-    product_phone=models.Product_phone.objects.all()
+    Product_phone=models.Product_phone.objects.all()
 
     #for cart counter, fetching products ids added by customer from cookies
-    if 'product_ids' in request.COOKIES:
-        product_ids = request.COOKIES['product_ids']
-        counter=product_ids.split('|')
+    if 'Product_phone_ids' in request.COOKIES:
+        Product_phone_ids = request.COOKIES['Product_phone_ids']
+        counter=Product_phone_ids.split('|')
         product_count_in_cart=len(set(counter))
     else:
         product_count_in_cart=1
 
-    response = render(request, 'ecom/customer-phone.html',{'product_phone':product_phone,'product_count_in_cart':product_count_in_cart})
+    response = render(request, 'ecom/customer-phone.html',{'Product_phone':Product_phone,'product_count_in_cart':product_count_in_cart})
 
     #adding product id to cookies
-    if 'product_ids' in request.COOKIES:
-        product_ids = request.COOKIES['product_ids']
-        if product_ids=="":
-            product_ids=str(kk)
+    if 'Product_phone_ids' in request.COOKIES:
+        Product_phone_ids = request.COOKIES['Product_phone_ids']
+        if Product_phone_ids=="":
+            Product_phone_ids=str(kk)
         else:
-            product_ids=product_ids+"|"+str(kk)
-        response.set_cookie('product_ids', product_ids)
+            Product_phone_ids=Product_phone_ids+"|"+str(kk)
+        response.set_cookie('Product_phone_ids', Product_phone_ids)
     else:
-        response.set_cookie('product_ids', kk)
+        response.set_cookie('Product_phone_ids', kk)
 
     product_phone=models.Product_phone.objects.get(id=kk)
     messages.info(request, product_phone.name + ' added to cart successfully!')
@@ -437,7 +438,7 @@ def cart_view_phone(request):
             #for total price shown in cart
             for p in product_phone:
                 total=total+p.price
-    return render(request,'ecom/cart_phone.html',{'product_phone':product_phone,'total':total,'product_count_in_cart':product_count_in_cart})
+    return render(request,'ecom/cart.html',{'product_phone':product_phone,'total':total,'product_count_in_cart':product_count_in_cart})
 
 
 def remove_from_cart_view(request,pk):
